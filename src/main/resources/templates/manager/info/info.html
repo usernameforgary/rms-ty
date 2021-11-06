@@ -1,0 +1,141 @@
+﻿<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="H-ui/lib/html5shiv.js"></script>
+<script type="text/javascript" src="H-ui/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="H-ui/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="H-ui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/style.css" />
+	<link href="mis/css/style.css" rel="stylesheet" type="text/css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="H-ui/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>我的桌面</title>
+</head>
+<body>
+<div class="place">
+	<span>位置：</span>
+	<ul class="placeul">
+		<li><a href="index">首页</a></li>
+		<li><a href="info">个人信息</a></li>
+	</ul>
+</div>
+<div class="page-container" style="padding: 0px 18px;">
+
+	<table class="table table-border table-bordered table-bg mt-20">
+		<thead>
+			<tr>
+				<th colspan="2" scope="col">个人账号信息</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td width="30%">工号:</td>
+				<td><span id="lbServerName" th:text="${user.uid}">http://127.0.0.1/</span></td>
+			</tr>
+			<tr>
+				<td >账号状态:</td>
+				<td><span th:if="${user.state}==0" ><span style="color: burlywood">账号初次使用</span>(建议修改密码激活账号)</span>
+					<span th:if="${user.state}==1" ><span style="color: red">账号不可用</span>(建议修正个人信息以激活账号)</span>
+					<span th:if="${user.state}==2" ><span style="color: green">账号待审核</span>(审核期间功能不可用)</span>
+					<span th:if="${user.state}==3" >账号正常使用</span>
+				</td>
+			</tr>
+			<tr>
+				<td >姓名:</td>
+				<td><span  th:text="${user.name}">http://127.0.0.1/</span></td>
+			</tr>
+			<tr>
+				<td>性别:</td>
+				<td th:text="${user.sex}">192.168.1.1</td>
+			</tr>
+			<tr>
+				<td>职称:</td>
+				<td th:text="${user.title}"></td>
+			</tr>
+			<tr>
+				<td>所属学院:</td>
+				<td th:text="${user.belong}">80</td>
+			</tr>
+			<tr>
+				<td>所在专业:</td>
+				<td th:text="${majorName}">80</td>
+			</tr>
+			<tr>
+				<td>账号创建时间:</td>
+				<td th:text="${dateKit.formatDateByUnixTime(user.createTime)}">80</td>
+			</tr>
+			<tr th:if="${user.updateTime}!=null">
+				<td>账号更新时间:</td>
+				<td th:text="${dateKit.formatDateByUnixTime(user.updateTime)}">80</td>
+			</tr>
+			<tr>
+				<td>简介:</td>
+				<td th:text="${user.profile}">Microsoft-IIS/6.0</td>
+			</tr>
+			<tr>
+				<td>附件</td>
+				<td>
+					<div style="display: flex;flex-wrap: wrap;">
+						<div id="tab2" class="tabson">
+							<ul class="imglist">
+								<li th:if="${documentList.size()}!=0" th:each="document:${documentList}">
+									<span>
+										<img th:href="'download?did='+${document.did}" th:download="${document.name}" th:src="'images//'+${document.getType().toLowerCase().substring(1)}+'.png'"  onerror='this.src="images//unknown.png" '  />
+									</span>
+									<h2><a class="wth" th:href="'download?did='+${document.did}" th:download="${document.name}" th:text="${document.name}">软件界面设计下载</a></h2>
+									<p><a th:href="'download?did='+${document.did}" th:download="${document.name}" >下载</a><span>&nbsp;&nbsp;&nbsp;&nbsp;<a  th:onclick="'delete_document(this,\''+${document.did}+'\')'">删除</a></span></p>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+</div>
+<footer class="footer mt-20">
+	<div class="container">
+
+	</div>
+</footer>
+<script type="text/javascript" src="H-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="H-ui/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="H-ui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript">
+    function delete_document(obj,did){
+        layer.confirm('确认要删除吗？',function(index){
+            var itemType='[[${itemType}]]';
+            $.ajax({
+                type: 'POST',
+                data:{"did":did,"itemType":itemType},
+                url: 'ajax-document-delete',
+                dataType: 'json',
+                success: function(data){
+                    if(data.msg=="删除成功！"){
+                        $(obj).parents("li").remove();
+                        layer.msg(data.msg,{icon:1,time:1500});
+                    }else {
+                        layer.msg(data.msg,{icon:2,time:1500});
+                    }
+                },
+                error:function(data) {
+                    layer.msg('发生未知错误',{icon:2,time:1500});
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+</script>
+</body>
+</html>

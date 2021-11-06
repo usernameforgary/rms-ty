@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="H-ui/lib/html5shiv.js"></script>
+    <script type="text/javascript" src="H-ui/lib/respond.min.js"></script>
+    <![endif]-->
+    <link href="mis/css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/style.css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="H-ui/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>资讯列表</title>
+</head>
+<body>
+<button id="btn-refresh" style="display: none"  onclick="refresh()">刷新</button>
+<div class="place">
+    <span>位置：</span>
+    <ul class="placeul">
+        <li><a href="index">首页</a></li>
+        <li><a href="project-overview">项目总览</a></li>
+    </ul>
+    <ul class="placeul">
+        <li style="font-weight: bold">
+            <a>消息</a>
+        </li>
+        <li th:if="${first!=null}">
+            <span style="color: red">您的提交没通过审核,点击审核状态中的 原因 查看</span>
+        </li>
+    </ul>
+</div>
+<div class="page-container">
+    <div class="mt-20" >
+        <table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
+            <thead>
+            <tr class="text-c">
+                <th width="20">ID</th>
+                <th width="40">项目编号</th>
+                <th width="120">项目题目</th>
+                <th width="20">主持人</th>
+                <th width="80">参与人员</th>
+                <th width="80">项目来源</th>
+                <th width="60">立项时间</th>
+                <th width="60">项目级别</th>
+                <th width="40">审核状态</th>
+                <th width="40">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="text-c" th:if="${projectList.size()}!=0" th:each="project:${projectList}">
+                <td th:text="${projectList.indexOf(project)+1}"></td>
+                <td th:text="${project.number}"></td>
+                <td><u style="cursor:pointer" class="text-primary" th:data-name="${project.topic}" th:data-id="${project.pid}"   onClick="item_detail(this.getAttribute('data-name'),this.getAttribute('data-id'))" title="查看" th:text="${project.topic}">资讯标题</u></td>
+                <td  th:text="${project.host}"></td>
+                <td  th:text="${project.people}"></td>
+                <td th:text="${project.projectSource}"></td>
+                <td th:text="${dateKit.formatDateByUnixTimeAndType(project.setTime,'yyyy-MM-dd')}"></td>
+                <td th:text="${project.rank}"></td>
+                <td th:if="${project.state}==0"><span class="label label-default radius">待审核</span><a th:if="${project.remake!=null}" onclick="lastNotice(this.getAttribute('data-id'))" th:data-id="${project.remake}" class="label label-danger radius">原因</a></td>
+                <td th:if="${project.state}==1"><span class="label label-danger radius" onclick="lastNotice(this.getAttribute('data-id'))" th:data-id="${project.remake}">未通过</span><a th:if="${project.remake!=null}" onclick="lastNotice(this.getAttribute('data-id'))" th:data-id="${project.remake}" class="label label-danger radius">原因</a></td>
+                <td th:if="${project.state}==2"><span class="label label-success radius">已审核</span></td>
+                <td class="f-14 td-manage">
+                    <span th:if="${(project.createId.equals(uid) || project.isAudit) && !project.state.equals('2')}"><a style="text-decoration:none" class="ml-5" th:data-id="${project.pid}" th:data-title="${project.name}"  onClick="itemEdit(this,this.getAttribute('data-id'))" href="javascript:;"  title="编辑内容"><i class="Hui-iconfont">&#xe60c;</i></a></span>
+                    <span><a th:data-name="${project.name}" th:data-id="${project.pid}"   onClick="item_detail_file(this.getAttribute('data-name'),this.getAttribute('data-id'))" style="text-decoration:none" class="ml-5"  href="javascript:;" title="附件详情"><i class="Hui-iconfont">&#xe687;</i></a></span>
+                    <span th:if="${(project.createId.equals(uid) || project.isAudit) && !project.state.equals('2')}"><a style="text-decoration:none" class="ml-5" th:data-id="${project.pid}"  onClick="itemDelete(this,this.getAttribute('data-id'))" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="H-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="H-ui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="H-ui/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="H-ui/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="H-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="H-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="H-ui/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript">
+    $('.table-sort').dataTable({
+        "bStateSave": true,//状态保存
+        "pading":false,
+        "aoColumnDefs": [
+            //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+            {"orderable":false,"aTargets":[8]}// 不参与排序的列
+        ]
+    });
+
+    function item_detail(title,id){
+        var index = layer.open({
+            type: 2,
+            title:title,
+            content: "item-detail?id="+id+"&itemType=project&from=user"
+        });
+        layer.full(index);
+    }
+    function item_detail_file(title,id){
+        var index = layer.open({
+            type: 2,
+            title:title,
+            content: "item-detail-file?id="+id+"&itemType=project&from=user"
+        });
+        layer.full(index);
+    }
+
+    function itemEdit(obj,id){
+        var index = layer.open({
+            type: 2,
+            title:'编辑内容',
+            content: "project-edit?id="+id
+        });
+        layer.full(index);
+    }
+    /*项目-删除*/
+    function itemDelete(obj,id){
+        layer.confirm('确认要删除吗？',function(index){
+            $.ajax({
+                type: 'POST',
+                data:{"itemType":"project","id":id},
+                url: 'ajax-item-delete',
+                dataType: 'json',
+                success: function(data){
+                    if(data.msg=="删除成功！"){
+                        $(obj).parents("tr").remove();
+                        layer.msg(data.msg,{icon:1,time:1500});
+                    }else {
+                        layer.msg(data.msg,{icon:2,time:1500});
+                    }
+                },
+                error:function(data) {
+                    layer.msg('发生未知错误',{icon:2,time:1500});
+                    console.log(data.msg);
+                }
+            });
+        });
+    }
+</script>
+<script>
+    function refresh() {
+        window.location.replace(location.href);
+    }
+    function lastNotice(text) {
+        layer.alert(text, {
+            skin: 'layui-layer-lan'
+            ,closeBtn: 0
+            ,shift: 1 //动画类型
+        });
+    }
+</script>
+</body>
+</html>

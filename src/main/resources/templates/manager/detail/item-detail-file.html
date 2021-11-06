@@ -1,0 +1,447 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="mis/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="mis/css/select.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="H-ui/static/h-ui.admin/css/style.css" />
+    <script type="text/javascript" src="mis/js/jquery.js"></script>
+    <script type="text/javascript" src="mis/js/jquery.idTabs.min.js"></script>
+    <script type="text/javascript" src="mis/js/select-ui.min.js"></script>
+    <style>
+        .imglist li h2 {
+            text-align: center;
+            line-height: 12px;
+        }
+        a img, img {
+            margin-left: 14px;
+        }
+        .imglist li {
+            margin-right: 12px;
+        }
+        .imglist li:hover {
+            background-color: aliceblue;
+        }
+    </style>
+</head>
+
+<body>
+<div class="formbody">
+
+    <div id="usual1" class="usual">
+
+        <div class="itab">
+            <ul>
+                <li><a href="#tab1">基本信息</a></li>
+                <li><a href="#tab2" class="selected">附件信息</a></li>
+            </ul>
+        </div>
+
+        <div id="tab1" class="tabson" style="height: 37px;">
+            <div class="page-container" style="padding: 0px;">
+
+                <table th:if="${itemType.equals('project')}" class="table table-border table-bordered table-bg mt-20">
+                    <thead>
+                    <tr>
+                        <th colspan="2" scope="col" >项目信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="30%" >项目名称:</th>
+                        <td><span id="lbServerName" th:text="${project.name}">http://127.0.0.1/</span></td>
+                    </tr>
+                    <tr>
+                        <td >项目题目:</td>
+                        <td th:text="${project.topic}">192.168.1.1</td>
+                    </tr>
+                    <tr>
+                        <td >项目类型:</td>
+                        <td th:text="${project.genre}">192.168.1.1</td>
+                    </tr>
+                    <tr>
+                        <td >主持人:</td>
+                        <td th:text="${project.host}">192.168.1.1</td>
+                    </tr>
+                    <tr >
+                        <td>参与者:</td>
+                        <td th:text="${project.people}"></td>
+                    </tr>
+                    <tr>
+                        <td>研究开始时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(project.startTime,'YYYY-MM-dd')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>研究结束时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(project.endTime,'YYYY-MM-dd')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>立项时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(project.setTime,'YYYY-MM-dd')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>项目经费:</td>
+                        <td th:text="${project.money}+'万元'">80</td>
+                    </tr>
+                    <tr>
+                        <td>项目来源:</td>
+                        <td th:text="${project.projectSource}">80</td>
+                    </tr>
+                    <tr th:if="${project.number!=null}">
+                        <td>项目编号:</td>
+                        <td th:text="${project.number}">80</td>
+                    </tr>
+                    <tr>
+                        <td>项目等级:</td>
+                        <td th:text="${project.level}">80</td>
+                    </tr>
+                    <tr>
+                        <td>项目级别:</td>
+                        <td th:text="${project.rank}">80</td>
+                    </tr>
+                    <tr>
+                        <td>项目类别:</td>
+                        <td th:text="${project.type}">80</td>
+                    </tr>
+                    <tr>
+                        <td>备注:</td>
+                        <td th:text="${project.profile}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传人:</td>
+                        <td th:text="${createrMap.get(project.createId).name}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(project.createTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:if="${project.updateTime}!=null">
+                    <td>更新时间:</td>
+                    <td th:text="${dateKit.formatDateByUnixTime(project.updateTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:switch="${project.state}">
+                        <td>上传状态：</td>
+                        <td style="color: #7d7d7d" th:case="0" >待审核</td>
+                        <td style="color: red" th:case="1" >未通过</td>
+                        <td style="color: green" th:case="2" >已审核</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table th:if="${itemType.equals('thesis')}" class="table table-border table-bordered table-bg mt-20">
+                    <thead>
+                    <tr>
+                        <th colspan="2" scope="col" >论文信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="30%" >论文名称:</th>
+                        <td><span  th:text="${thesis.name}">http://127.0.0.1/</span></td>
+                    </tr>
+                    <tr>
+                        <td >第一作者:</td>
+                        <td th:text="${thesis.host}">192.168.1.1</td>
+                    </tr>
+                    <tr >
+                        <td>其他作者:</td>
+                        <td  th:if="${thesis.people!=null}" th:text="${thesis.people}"></td>
+                    </tr>
+                    <tr>
+                        <td>期刊:</td>
+                        <td th:text="${thesis.book}">80</td>
+                    </tr>
+                    <tr>
+                        <td>年卷期页码:</td>
+                        <td><span th:text="${thesis.year}"></span>,<span th:if="${thesis.dossier!=null}" th:text="${thesis.dossier}"></span><span th:if="${thesis.issue!=null}" th:text="'('+${thesis.issue}+')'"></span>:<span th:text="${thesis.pageNum}"></span></td>
+                    </tr>
+                    <tr>
+                        <td>论文级别:</td>
+                        <td th:text="${thesis.rank}">80</td>
+                    </tr>
+                    <tr>
+                        <td>论文类别:</td>
+                        <td th:text="${thesis.type}">80</td>
+                    </tr>
+                    <tr>
+                        <td>发表时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(thesis.publishTime,'yyyy-MM-dd')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>论文摘要:</td>
+                        <td th:text="${thesis.profile}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传人:</td>
+                        <td th:text="${createrMap.get(thesis.createId).name}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(thesis.createTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:if="${thesis.updateTime}!=null">
+                        <td>更新时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(thesis.updateTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:switch="${thesis.state}">
+                        <td>上传状态：</td>
+                        <td style="color: #7d7d7d" th:case="0" >待审核</td>
+                        <td style="color: red" th:case="1" >未通过</td>
+                        <td style="color: green" th:case="2" >已审核</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table th:if="${itemType.equals('reward')}" class="table table-border table-bordered table-bg mt-20">
+                    <thead>
+                    <tr>
+                        <th colspan="2" scope="col" >奖励信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="30%" >奖励名称:</th>
+                        <td><span  th:text="${reward.name}">http://127.0.0.1/</span></td>
+                    </tr>
+                    <tr >
+                        <td>获奖人:</td>
+                        <td th:text="${reward.people}"></td>
+                    </tr>
+                    <tr>
+                        <td>授奖单位:</td>
+                        <td th:text="${reward.company}">80</td>
+                    </tr>
+                    <tr>
+                        <td>获奖时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(reward.getTime,'yyyy-MM-dd')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>奖励级别:</td>
+                        <td th:text="${reward.level}">80</td>
+                    </tr>
+                    <tr>
+                        <td>奖励等级:</td>
+                        <td th:text="${reward.rank}">80</td>
+                    </tr>
+                    <tr>
+                        <td>奖励简介:</td>
+                        <td th:text="${reward.profile}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传人:</td>
+                        <td th:text="${createrMap.get(reward.createId).name}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(reward.createTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:if="${reward.updateTime}!=null">
+                        <td>更新时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(reward.updateTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:switch="${reward.state}">
+                        <td>上传状态：</td>
+                        <td style="color: #7d7d7d" th:case="0" >待审核</td>
+                        <td style="color: red" th:case="1" >未通过</td>
+                        <td style="color: green" th:case="2" >已审核</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table th:if="${itemType.equals('textbook')}" class="table table-border table-bordered table-bg mt-20">
+                    <thead>
+                    <tr>
+                        <th colspan="2" scope="col" >教材/专著信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="30%" >教材/专著名称:</th>
+                        <td><span  th:text="${textbook.name}">http://127.0.0.1/</span></td>
+                    </tr>
+                    <tr >
+                        <td>类型:</td>
+                        <td th:text="${textbook.category}"></td>
+                    </tr>
+                    <tr >
+                        <td>主编:</td>
+                        <td th:text="${textbook.people}"></td>
+                    </tr>
+                    <tr>
+                        <td>出版社:</td>
+                        <td th:text="${textbook.press}">80</td>
+                    </tr>
+                    <tr>
+                        <td>出版年月:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(textbook.publishTime,'YYYY-MM')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>规划类别:</td>
+                        <td th:text="${textbook.type}">80</td>
+                    </tr>
+                    <tr>
+                        <td>教材/专著获奖:</td>
+                        <td th:text="${textbook.reward}">80</td>
+                    </tr>
+                    <tr>
+                        <td>教材/专著简介:</td>
+                        <td th:text="${textbook.profile}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传人:</td>
+                        <td th:text="${createrMap.get(textbook.createId).name}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(textbook.createTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:if="${textbook.updateTime}!=null">
+                        <td>更新时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(textbook.updateTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:switch="${textbook.state}">
+                        <td>上传状态：</td>
+                        <td style="color: #7d7d7d" th:case="0" >待审核</td>
+                        <td style="color: red" th:case="1" >未通过</td>
+                        <td style="color: green" th:case="2" >已审核</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <table th:if="${itemType.equals('meeting')}" class="table table-border table-bordered table-bg mt-20">
+                    <thead>
+                    <tr>
+                        <th colspan="2" scope="col" >会议信息</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th width="30%" >会议名称:</th>
+                        <td><span  th:text="${meeting.name}">http://127.0.0.1/</span></td>
+                    </tr>
+                    <tr >
+                        <td>会议地点:</td>
+                        <td th:text="${meeting.position}"></td>
+                    </tr>
+                    <tr >
+                        <td>参会人员:</td>
+                        <td th:text="${meeting.people}"></td>
+                    </tr>
+                    <tr>
+                        <td>主办单位:</td>
+                        <td th:text="${meeting.sponsor}">80</td>
+                    </tr>
+                    <tr>
+                        <td>承办单位:</td>
+                        <td th:text="${meeting.organizer}">80</td>
+                    </tr>
+                    <tr>
+                        <td>会议开始时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(meeting.startTime,'YYYY-MM-dd HH:mm')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>会议结束时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(meeting.endTime,'YYYY-MM-dd HH:mm')}">80</td>
+                    </tr>
+                    <tr>
+                        <td>会议简介:</td>
+                        <td th:text="${meeting.profile}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传人:</td>
+                        <td th:text="${createrMap.get(meeting.createId).name}">80</td>
+                    </tr>
+                    <tr>
+                        <td>上传时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(meeting.createTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:if="${meeting.updateTime}!=null">
+                        <td>更新时间:</td>
+                        <td th:text="${dateKit.formatDateByUnixTime(meeting.updateTime)}">Microsoft-IIS/6.0</td>
+                    </tr>
+                    <tr th:switch="${meeting.state}">
+                        <td>上传状态：</td>
+                        <td style="color: #7d7d7d" th:case="0" >待审核</td>
+                        <td style="color: red" th:case="1" >未通过</td>
+                        <td style="color: green" th:case="2" >已审核</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+        <div id="tab2" class="tabson">
+            <ul class="imglist">
+                <li th:if="${documentList.size()}!=0" th:each="document:${documentList}">
+                        <span>
+                            <img th:href="'download?did='+${document.did}" th:download="${document.name}" th:src="'images//'+${document.getType().toLowerCase().substring(1)}+'.png'"  onerror='this.src="images//unknown.png" '  />
+                        </span>
+                    <h2><a class="wth" th:href="'download?did='+${document.did}" th:download="${document.name}" th:text="${document.name}">软件界面设计下载</a></h2>
+                    <p><a th:href="'download?did='+${document.did}" th:download="${document.name}" >下载</a><span th:if="${display}==true">&nbsp;&nbsp;&nbsp;&nbsp;<a  th:onclick="'deldte_document(this,\''+${document.did}+'\')'">删除</a></span></p>
+                </li>
+            </ul>
+                <div class="pagin">
+                    <div class="message">共<i class="blue" th:text="${documentList.size()}">1256</i>个文件</div>
+                    <!--<ul class="paginList" style=" white-space:nowrap; ">-->
+                        <!--<li  th:if="${documentList.size()}!=0" class="paginItem"><a style="width: 83px;" th:href="'downloadAll?did='+${documentList.get(0).did}" th:download="${documentList.get(0).name}">全部下载</a></li>-->
+                    <!--</ul>-->
+                </div>
+            </div>
+    </div>
+
+
+</div>
+
+    <script type="text/javascript">
+        $("#usual1 ul").idTabs();
+    </script>
+
+    <script type="text/javascript">
+        $('.tablelist tbody tr:odd').addClass('odd');
+    </script>
+
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="H-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="H-ui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="H-ui/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="H-ui/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="H-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="H-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="H-ui/lib/laypage/1.2/laypage.js"></script>
+</body>
+<script type="text/javascript">
+    function deldte_document(obj,did){
+        layer.confirm('确认要删除吗？',function(index){
+            var itemType='[[${itemType}]]';
+            $.ajax({
+                type: 'POST',
+                data:{"did":did,"itemType":itemType},
+                url: 'ajax-document-delete',
+                dataType: 'json',
+                success: function(data){
+                    if(data.msg=="删除成功！"){
+                        $(obj).parents("li").remove();
+                        layer.msg(data.msg,{icon:1,time:1500});
+                    }else {
+                        layer.msg(data.msg,{icon:2,time:1500});
+                    }
+                },
+                error:function(data) {
+                    layer.msg('发生未知错误',{icon:2,time:1500});
+                    console.log(data.msg);
+                },
+            });
+        });
+    }
+</script>
+</html>

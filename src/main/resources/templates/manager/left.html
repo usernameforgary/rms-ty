@@ -1,0 +1,86 @@
+﻿<!--<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">-->
+<html  xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<link href="mis/css/style.css" rel="stylesheet" type="text/css" />
+<script language="JavaScript" src="mis/js/jquery.js"></script>
+    <style type="text/css">
+        .red-point{
+            position: relative;
+        }
+        .red-point::before{
+            content: " ";
+            border: 3px solid red;
+            border-radius: 145px;
+            position: absolute;
+            z-index: 1000;
+            right: 13px;
+            margin-right: 148px;
+            margin-top: 11px;
+        }
+    </style>
+<script type="text/javascript">
+$(function(){	
+	//导航切换
+	$(".menuson li").click(function(){
+		$(".menuson li.active").removeClass("active")
+		$(this).addClass("active");
+	});
+	
+	$('.title').click(function(){
+		var $ul = $(this).next('ul');
+		$('dd').find('ul').slideUp();
+		if($ul.is(':visible')){
+			$(this).next('ul').slideUp();
+		}else{
+			$(this).next('ul').slideDown();
+		}
+	});
+})	
+</script>
+
+
+</head>
+
+<body style="background:#f0f9fd;">
+	<div class="lefttop"><span></span>功能面板</div>
+    
+    <dl class="leftmenu" style=" white-space:nowrap; ">
+
+            <dd>
+                <div class="title">
+                <span><img src="mis/images/leftico01.png" /></span>管理信息
+                </div>
+                <ul class="menuson">
+                    <li class="active"><cite></cite><a href="index" target="rightFrame">系统首页</a><i></i></li>
+                    <li><cite></cite><a href="info" target="rightFrame">个人信息</a><i></i></li>
+                    <li><cite></cite><a href="info-change" target="rightFrame">修改信息</a><i></i></li>
+                    <li><cite></cite><a href="password-change" target="rightFrame">修改密码</a><i></i></li>
+                </ul>
+            </dd>
+            <dd th:if="${achievementDisplay}==true">
+                <div class="title">
+                <span><img src="mis/images/leftico02.png" /></span>成果展示
+                </div>
+                <ul class="menuson" >
+                    <li><cite></cite><a href="project-overview" target="rightFrame">项目总览</a><i></i></li>
+                    <li><cite></cite><a href="thesis-overview" target="rightFrame">论文总览</a><i></i></li>
+                    <li><cite></cite><a href="reward-overview" target="rightFrame">奖励总览</a><i></i></li>
+                    <li><cite></cite><a href="textbook-overview" target="rightFrame">教材/专著总览</a><i></i></li>
+                    <li><cite></cite><a href="meeting-overview" target="rightFrame">会议总览</a><i></i></li>
+                    <li><cite></cite><a href="project-upload" target="rightFrame">上传成果</a><i></i></li>
+                </ul>
+            </dd>
+            <dd th:if="${checkDisplay}==true" >
+                <div class="title"><span><img src="mis/images/leftico03.png" /></span>成果查看/审核</div>
+                <ul class="menuson" >
+                    <li th:each="major:${majorList}"><cite></cite>
+                        <a th:if="${majorMap.get(major.mid)!=0}" target="rightFrame"  th:href="'check?mid='+${major.mid}" href="check" th:text="${major.name}">信息审核</a>
+                        <a th:if="${majorMap.get(major.mid)==0}" target="rightFrame"  th:href="'check?mid='+${major.mid}" href="check" th:text="${major.name}">信息审核</a>
+                        <i></i></li>
+                </ul>
+            </dd>
+    </dl>
+</body>
+</html>
